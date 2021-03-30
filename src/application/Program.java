@@ -4,6 +4,7 @@ import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
+
 import java.util.Date;
 import java.util.List;
 
@@ -22,15 +23,15 @@ public class Program {
         System.out.println(sellerFindById);
 
         System.out.println("\n=== TEST 2: seller findByDepartment =====");
-        Department department = new Department(2,null);
-        List<Seller>sellerList = sellerDao.findByDepartment(department);
-        for (Seller seller : sellerList){
+        Department department = new Department(2, null);
+        List<Seller> sellerList = sellerDao.findByDepartment(department);
+        for (Seller seller : sellerList) {
             System.out.println(seller);
         }
 
         System.out.println("\n=== TEST 3: seller findAll =====");
         sellerList = sellerDao.findAll();
-        for (Seller seller : sellerList){
+        for (Seller seller : sellerList) {
             System.out.println(seller);
         }
 
@@ -39,8 +40,11 @@ public class Program {
         sellerDao.insert(newSeller);
         System.out.println("Inserted! New id = " + newSeller.getId());
 
-
-
+        System.out.println("\n=== TEST 5: seller findAll =====");
+        Seller seller = sellerDao.findById(1);
+        seller.setName("Martha Waine");
+        sellerDao.update(seller);
+        System.out.println("Update completed");
 
 
     }

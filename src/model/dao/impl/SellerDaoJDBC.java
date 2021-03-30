@@ -40,23 +40,20 @@ public class SellerDaoJDBC implements SellerDao {
 
             int rowsAffected = preparedStatement.executeUpdate();
 
-            if (rowsAffected >0){
+            if (rowsAffected > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
-                if (resultSet.next()){
+                if (resultSet.next()) {
                     int id = resultSet.getInt(1);
                     obj.setId(id);
                 }
                 DB.closeResultSet(resultSet);
-            }
-            else {
+            } else {
                 throw new DbException("Unexpected error! No rows affected!");
             }
 
-        }
-        catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             throw new DbException(sqlException.getMessage());
-        }
-        finally {
+        } finally {
             DB.closeStatement(preparedStatement);
         }
 
@@ -65,9 +62,29 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void update(Seller obj) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "UPDATE seller "
+                            + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                            + "WHERE Id = ?");
 
+
+            preparedStatement.setString(1, obj.getName());
+            preparedStatement.setString(2, obj.getEmail());
+            preparedStatement.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+            preparedStatement.setDouble(4, obj.getBaseSalary());
+            preparedStatement.setInt(5, obj.getDepartment().getId());
+            preparedStatement.setInt(6, obj.getId());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            throw new DbException(sqlException.getMessage());
+        } finally {
+            DB.closeStatement(preparedStatement);
+        }
     }
-
     @Override
     public void deleteById(Integer id) {
 
